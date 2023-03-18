@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rest countries</title>
+    <style>
+      .listing-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .student-card {
+        width: calc(50% - 10px);
+        height: 300px;
+        background-color: aqua;
+        margin: 5px;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container" class="listing-container"></div>
+    <script>
+      let data = [];
+      function printData(data = []) {
+        data.map((element, index) => console.log(element));
+      }
+      // WILL CREATE A STUDENT CARD AND RETURN THE CARD
+      function createStudentCard(data = []) {
+        let card = document.createElement("div");
+        card.setAttribute("id", "card");
+        card.setAttribute("class", "student-card");
+        let studentName = document.createElement("h3");
+        let courseName = document.createElement("h5");
+        let joiningDate = document.createElement("p");
+        let red = document.createElement("p");
+        let reg = document.createElement("h4");
+        let code = document.createElement("h6");
+        studentName.innerText = data.name.common;
+        courseName.innerText = data.capital;
+        joiningDate.innerText = data.latlng;
+        red.innerText = data.flag;
+        reg.innerText = data.region;
+        code.innerText = data.population;
+        card.append(studentName, courseName, joiningDate ,red ,reg ,code );
+       console.log(code);
+        return card;
+      }
+
+      // WILL STORE ALL THE STUDENT CARDS AND RENDERS IN THE UI
+      function renderStudentsCard(data = []) {
+        // WILL HAVE LIST OF CREATED CARDS
+        let cards = [];
+        data.forEach((element) => {
+          cards.push(createStudentCard(element));
+        });
+        const container = document.getElementById("container");
+        container.append(...cards);
+      }
+
+      async function getData() {
+        const studentDataResponse = await fetch(
+          "https://restcountries.com/v3.1/all"
+        );
+        data = await studentDataResponse.json();
+        if (data.length > 0) {
+          renderStudentsCard(data);
+          console.log(data);
+        }
+      }
+      getData();
+    </script>
+  </body>
+</html>
