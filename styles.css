@@ -5,7 +5,7 @@
   .student-card {
     width: calc(20% - 10px);
     height: 300px;
-    background-color: aqua;
+    background-color: grey;
     margin: 5px;
     padding: 10px;
     box-sizing: border-box;
