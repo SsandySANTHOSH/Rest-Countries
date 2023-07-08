@@ -1,49 +1,54 @@
-let data = [];
-function printData(data = []) {
-  data.map((element, index) => console.log(element));
-}
-// WILL CREATE A STUDENT CARD AND RETURN THE CARD
-function createStudentCard(data = []) {
-  let card = document.createElement("div");
-  card.setAttribute("id", "card");
-  card.setAttribute("class", "student-card");
-  let studentName = document.createElement("h2");
-  let courseName = document.createElement("h3");
-  let joiningDate = document.createElement("h3");
-  let red = document.createElement("h4");
-  let reg = document.createElement("h3");
-  let code = document.createElement("h4");
-  studentName.innerText = data.name.common;
-  courseName.innerText =data.region; 
-  joiningDate.innerText = data.capital;
-  red.innerText = data.flag;
-  reg.innerText = data.latlng;
-  code.innerText = data.population;
-  card.append(studentName, courseName, joiningDate ,red ,reg ,code );
- console.log(code);
-  return card;
+// Function to fetch data from the API
+function fetchData() {
+  fetch('https://restcountries.com/v3.1/all')
+    .then(response => response.json())
+    .then(data => {
+      // Process the fetched data
+      displayData(data);
+    })
+    .catch(error => {
+      console.log('Error:', error);
+    });
 }
 
-// WILL STORE ALL THE STUDENT CARDS AND RENDERS IN THE UI
-function renderStudentsCard(data = []) {
-  // WILL HAVE LIST OF CREATED CARDS
-  let cards = [];
-  data.forEach((element) => {
-    cards.push(createStudentCard(element));
+// Function to display the fetched data on the page
+function displayData(data) {
+  const container = document.getElementById('data-container');
+  container.innerHTML = '';
+
+  data.forEach(country => {
+    const card = document.createElement('div');
+    card.classList.add('country-card');
+
+    const name = document.createElement('h2');
+    name.textContent = country.name.common;
+    card.appendChild(name);
+
+    if (country.flags && country.flags.svg) {
+      const flag = document.createElement('img');
+      flag.src = country.flags.svg;
+      card.appendChild(flag);
+    }
+
+    const capital = document.createElement('p');
+    capital.textContent = `Capital: ${country.capital}`;
+    card.appendChild(capital);
+
+    const region = document.createElement('p');
+    region.textContent = `Region: ${country.region}`;
+    card.appendChild(region);
+
+    const countryCode = document.createElement('p');
+    countryCode.textContent = `Country Code: ${country.cca3}`;
+    card.appendChild(countryCode);
+
+    const population = document.createElement('p');
+    population.textContent = `Population: ${country.population}`;
+    card.appendChild(population);
+
+    container.appendChild(card);
   });
-  const container = document.getElementById("container");
-  container.append(...cards);
 }
 
-async function getData() {
-  const studentDataResponse = await fetch(
-    "https://restcountries.com/v3.1/all"
-  );
-  data = await studentDataResponse.json();
-  if (data.length > 0) {
-    renderStudentsCard(data);
-    console.log(data);
-  }
-}
-getData();
-
+// Fetch data when the page loads
+document.addEventListener('DOMContentLoaded', fetchData);
